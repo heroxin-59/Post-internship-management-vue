@@ -1,44 +1,38 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="实习生ID" prop="studentId">
+      <el-form-item label="实习生" prop="student">
         <el-input
-          v-model="queryParams.studentId"
-          placeholder="请输入实习生ID"
+          v-model="queryParams.student"
+          placeholder="请输入实习生"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="实习单位ID" prop="companyId">
+      <el-form-item label="实习单位" prop="company">
+        <el-select v-model="queryParams.company" placeholder="请选择实习单位" clearable>
+          <el-option
+            v-for="dict in dict.type.internship_company"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="工作日志" prop="dailyLog">
         <el-input
-          v-model="queryParams.companyId"
-          placeholder="请输入实习单位ID"
+          v-model="queryParams.dailyLog"
+          placeholder="请输入工作日志"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="考勤日期" prop="dailyDate">
+      <el-form-item label="创建时间" prop="createDate">
         <el-date-picker clearable
-          v-model="queryParams.dailyDate"
+          v-model="queryParams.createDate"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="请选择考勤日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="上班时间" prop="onTime">
-        <el-date-picker clearable
-          v-model="queryParams.onTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择上班时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label=" 下班时间" prop="offTime">
-        <el-date-picker clearable
-          v-model="queryParams.offTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择 下班时间">
+          placeholder="请选择创建时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -55,7 +49,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:daily:add']"
+          v-hasPermi="['student:log:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -66,7 +60,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:daily:edit']"
+          v-hasPermi="['student:log:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -77,7 +71,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:daily:remove']"
+          v-hasPermi="['student:log:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -87,32 +81,28 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:daily:export']"
+          v-hasPermi="['student:log:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="dailyList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="logList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键ID" align="center" prop="id" />
-      <el-table-column label="实习生ID" align="center" prop="studentId" />
-      <el-table-column label="实习单位ID" align="center" prop="companyId" />
-      <el-table-column label="考勤日期" align="center" prop="dailyDate" width="180">
+      <el-table-column label="实习生" align="center" prop="student" />
+      <el-table-column label="实习单位" align="center" prop="company">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.dailyDate, '{y}-{m}-{d}') }}</span>
+          <dict-tag :options="dict.type.internship_company" :value="scope.row.company"/>
         </template>
       </el-table-column>
-      <el-table-column label="上班时间" align="center" prop="onTime" width="180">
+      <el-table-column label="工作日志" align="center" prop="dailyLog" />
+      <el-table-column label="创建时间" align="center" prop="createDate" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.onTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label=" 下班时间" align="center" prop="offTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.offTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -120,14 +110,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:daily:edit']"
+            v-hasPermi="['student:log:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:daily:remove']"
+            v-hasPermi="['student:log:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -141,38 +131,35 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改实习考勤信息对话框 -->
+    <!-- 添加或修改实习日志信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="实习生ID" prop="studentId">
-          <el-input v-model="form.studentId" placeholder="请输入实习生ID" />
+        <el-form-item label="实习生" prop="student">
+          <el-input v-model="form.student" placeholder="请输入实习生" />
         </el-form-item>
-        <el-form-item label="实习单位ID" prop="companyId">
-          <el-input v-model="form.companyId" placeholder="请输入实习单位ID" />
+        <el-form-item label="实习单位" prop="company">
+          <el-select v-model="form.company" placeholder="请选择实习单位">
+            <el-option
+              v-for="dict in dict.type.internship_company"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="考勤日期" prop="dailyDate">
+        <el-form-item label="工作日志" prop="dailyLog">
+          <el-input v-model="form.dailyLog" placeholder="请输入工作日志" />
+        </el-form-item>
+        <el-form-item label="创建时间" prop="createDate">
           <el-date-picker clearable
-            v-model="form.dailyDate"
+            v-model="form.createDate"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="请选择考勤日期">
+            placeholder="请选择创建时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="上班时间" prop="onTime">
-          <el-date-picker clearable
-            v-model="form.onTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择上班时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label=" 下班时间" prop="offTime">
-          <el-date-picker clearable
-            v-model="form.offTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择 下班时间">
-          </el-date-picker>
+        <el-form-item label="备注">
+          <editor v-model="form.remark" :min-height="192"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -184,10 +171,11 @@
 </template>
 
 <script>
-import { listDaily, getDaily, delDaily, addDaily, updateDaily } from "@/api/internship/daily";
+import { listLog, getLog, delLog, addLog, updateLog } from "@/api/student/log";
 
 export default {
-  name: "Daily",
+  name: "Log",
+  dicts: ['internship_company'],
   data() {
     return {
       // 遮罩层
@@ -202,8 +190,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 实习考勤信息表格数据
-      dailyList: [],
+      // 实习日志信息表格数据
+      logList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -212,11 +200,10 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        studentId: null,
-        companyId: null,
-        dailyDate: null,
-        onTime: null,
-        offTime: null
+        student: null,
+        company: null,
+        dailyLog: null,
+        createDate: null,
       },
       // 表单参数
       form: {},
@@ -229,11 +216,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询实习考勤信息列表 */
+    /** 查询实习日志信息列表 */
     getList() {
       this.loading = true;
-      listDaily(this.queryParams).then(response => {
-        this.dailyList = response.rows;
+      listLog(this.queryParams).then(response => {
+        this.logList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -247,11 +234,11 @@ export default {
     reset() {
       this.form = {
         id: null,
-        studentId: null,
-        companyId: null,
-        dailyDate: null,
-        onTime: null,
-        offTime: null
+        student: null,
+        company: null,
+        dailyLog: null,
+        createDate: null,
+        remark: null
       };
       this.resetForm("form");
     },
@@ -275,16 +262,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加实习考勤信息";
+      this.title = "添加实习日志信息";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getDaily(id).then(response => {
+      getLog(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改实习考勤信息";
+        this.title = "修改实习日志信息";
       });
     },
     /** 提交按钮 */
@@ -292,13 +279,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateDaily(this.form).then(response => {
+            updateLog(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addDaily(this.form).then(response => {
+            addLog(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -310,8 +297,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除实习考勤信息编号为"' + ids + '"的数据项？').then(function() {
-        return delDaily(ids);
+      this.$modal.confirm('是否确认删除实习日志信息编号为"' + ids + '"的数据项？').then(function() {
+        return delLog(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -319,9 +306,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('internship/daily/export', {
+      this.download('student/log/export', {
         ...this.queryParams
-      }, `daily_${new Date().getTime()}.xlsx`)
+      }, `log_${new Date().getTime()}.xlsx`)
     }
   }
 };

@@ -1,13 +1,31 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="申请实习学生姓名" prop="name">
+      <el-form-item label="实习学生姓名" prop="name">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入申请实习学生姓名"
+          placeholder="请输入实习学生姓名"
           clearable
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="实习生学号" prop="code">
+        <el-input
+          v-model="queryParams.code"
+          placeholder="请输入实习生学号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="所学专业" prop="major">
+        <el-select v-model="queryParams.major" placeholder="请选择所学专业" clearable>
+          <el-option
+            v-for="dict in dict.type.internship_major"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="申请时间" prop="applyDate">
         <el-date-picker clearable
@@ -25,45 +43,55 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="实习单位ID" prop="companyId">
-        <el-input
-          v-model="queryParams.companyId"
-          placeholder="请输入实习单位ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="申请实习单位" prop="company">
+        <el-select v-model="queryParams.company" placeholder="请选择申请实习单位" clearable>
+          <el-option
+            v-for="dict in dict.type.internship_company"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="实习单位名称" prop="companyName">
-        <el-input
-          v-model="queryParams.companyName"
-          placeholder="请输入实习单位名称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="实习岗位" prop="duty">
-        <el-input
-          v-model="queryParams.duty"
-          placeholder="请输入实习岗位"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="申请岗位" prop="post">
+        <el-select v-model="queryParams.post" placeholder="请选择申请岗位" clearable>
+          <el-option
+            v-for="dict in dict.type.internship_post"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="指导教师意见" prop="teacherMemo">
-        <el-input
-          v-model="queryParams.teacherMemo"
-          placeholder="请输入指导教师意见"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.teacherMemo" placeholder="请选择指导教师意见" clearable>
+          <el-option
+            v-for="dict in dict.type.internship_momo"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="院系意见" prop="yxMemo">
-        <el-input
-          v-model="queryParams.yxMemo"
-          placeholder="请输入院系意见"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="实习单位负责人意见" prop="headMemo">
+        <el-select v-model="queryParams.headMemo" placeholder="请选择实习单位负责人意见" clearable>
+          <el-option
+            v-for="dict in dict.type.internship_momo"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="申请状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择申请状态" clearable>
+          <el-option
+            v-for="dict in dict.type.internship_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -79,7 +107,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:apply:add']"
+          v-hasPermi="['company:apply:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -90,7 +118,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:apply:edit']"
+          v-hasPermi="['company:apply:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -101,7 +129,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:apply:remove']"
+          v-hasPermi="['company:apply:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -111,7 +139,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:apply:export']"
+          v-hasPermi="['company:apply:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -120,19 +148,44 @@
     <el-table v-loading="loading" :data="applyList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键ID" align="center" prop="id" />
-      <el-table-column label="申请实习学生姓名" align="center" prop="name" />
+      <el-table-column label="实习学生姓名" align="center" prop="name" />
+      <el-table-column label="实习生学号" align="center" prop="code" />
+      <el-table-column label="所学专业" align="center" prop="major">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.internship_major" :value="scope.row.major"/>
+        </template>
+      </el-table-column>
       <el-table-column label="申请时间" align="center" prop="applyDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.applyDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="申请理由" align="center" prop="reason" />
-      <el-table-column label="实习单位ID" align="center" prop="companyId" />
-      <el-table-column label="实习单位名称" align="center" prop="companyName" />
-      <el-table-column label="实习岗位" align="center" prop="duty" />
-      <el-table-column label="实习工作内容" align="center" prop="content" />
-      <el-table-column label="指导教师意见" align="center" prop="teacherMemo" />
-      <el-table-column label="院系意见" align="center" prop="yxMemo" />
+      <el-table-column label="申请实习单位" align="center" prop="company">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.internship_company" :value="scope.row.company"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="申请岗位" align="center" prop="post">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.internship_post" :value="scope.row.post"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="指导教师意见" align="center" prop="teacherMemo">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.internship_momo" :value="scope.row.teacherMemo"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="实习单位负责人意见" align="center" prop="headMemo">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.internship_momo" :value="scope.row.headMemo"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="申请状态" align="center" prop="status">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.internship_status" :value="scope.row.status"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -140,14 +193,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:apply:edit']"
+            v-hasPermi="['company:apply:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:apply:remove']"
+            v-hasPermi="['company:apply:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -164,8 +217,21 @@
     <!-- 添加或修改实习申请信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="申请实习学生姓名" prop="name">
-          <el-input v-model="form.name" placeholder="请输入申请实习学生姓名" />
+        <el-form-item label="实习学生姓名" prop="name">
+          <el-input v-model="form.name" placeholder="请输入实习学生姓名" />
+        </el-form-item>
+        <el-form-item label="实习生学号" prop="code">
+          <el-input v-model="form.code" placeholder="请输入实习生学号" />
+        </el-form-item>
+        <el-form-item label="所学专业" prop="major">
+          <el-select v-model="form.major" placeholder="请选择所学专业">
+            <el-option
+              v-for="dict in dict.type.internship_major"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="申请时间" prop="applyDate">
           <el-date-picker clearable
@@ -178,23 +244,55 @@
         <el-form-item label="申请理由" prop="reason">
           <el-input v-model="form.reason" placeholder="请输入申请理由" />
         </el-form-item>
-        <el-form-item label="实习单位ID" prop="companyId">
-          <el-input v-model="form.companyId" placeholder="请输入实习单位ID" />
+        <el-form-item label="申请实习单位" prop="company">
+          <el-select v-model="form.company" placeholder="请选择申请实习单位">
+            <el-option
+              v-for="dict in dict.type.internship_company"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="实习单位名称" prop="companyName">
-          <el-input v-model="form.companyName" placeholder="请输入实习单位名称" />
-        </el-form-item>
-        <el-form-item label="实习岗位" prop="duty">
-          <el-input v-model="form.duty" placeholder="请输入实习岗位" />
-        </el-form-item>
-        <el-form-item label="实习工作内容">
-          <editor v-model="form.content" :min-height="192"/>
+        <el-form-item label="申请岗位" prop="post">
+          <el-select v-model="form.post" placeholder="请选择申请岗位">
+            <el-option
+              v-for="dict in dict.type.internship_post"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="指导教师意见" prop="teacherMemo">
-          <el-input v-model="form.teacherMemo" placeholder="请输入指导教师意见" />
+          <el-select v-model="form.teacherMemo" placeholder="请选择指导教师意见">
+            <el-option
+              v-for="dict in dict.type.internship_momo"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="院系意见" prop="yxMemo">
-          <el-input v-model="form.yxMemo" placeholder="请输入院系意见" />
+        <el-form-item label="实习单位负责人意见" prop="headMemo">
+          <el-select v-model="form.headMemo" placeholder="请选择实习单位负责人意见">
+            <el-option
+              v-for="dict in dict.type.internship_momo"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="申请状态" prop="status">
+          <el-select v-model="form.status" placeholder="请选择申请状态">
+            <el-option
+              v-for="dict in dict.type.internship_status"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -206,10 +304,11 @@
 </template>
 
 <script>
-import { listApply, getApply, delApply, addApply, updateApply } from "@/api/internship/apply";
+import { listApply, getApply, delApply, addApply, updateApply } from "@/api/company/apply";
 
 export default {
   name: "Apply",
+  dicts: ['internship_major', 'internship_post', 'internship_momo', 'internship_status', 'internship_company'],
   data() {
     return {
       // 遮罩层
@@ -235,14 +334,15 @@ export default {
         pageNum: 1,
         pageSize: 10,
         name: null,
+        code: null,
+        major: null,
         applyDate: null,
         reason: null,
-        companyId: null,
-        companyName: null,
-        duty: null,
-        content: null,
+        company: null,
+        post: null,
         teacherMemo: null,
-        yxMemo: null
+        headMemo: null,
+        status: null
       },
       // 表单参数
       form: {},
@@ -274,14 +374,15 @@ export default {
       this.form = {
         id: null,
         name: null,
+        code: null,
+        major: null,
         applyDate: null,
         reason: null,
-        companyId: null,
-        companyName: null,
-        duty: null,
-        content: null,
+        company: null,
+        post: null,
         teacherMemo: null,
-        yxMemo: null
+        headMemo: null,
+        status: null
       };
       this.resetForm("form");
     },
@@ -349,7 +450,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('internship/apply/export', {
+      this.download('company/apply/export', {
         ...this.queryParams
       }, `apply_${new Date().getTime()}.xlsx`)
     }
