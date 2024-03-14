@@ -6,7 +6,7 @@
        <!--  <p>
           一直想做一款后台管理系统，看了很多优秀的开源项目但是发现没有合适自己的。于是利用空闲休息时间开始自己写一套后台系统。如此有了若依管理系统，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。所有前端后台代码封装过后十分精简易上手，出错概率低。同时支持移动客户端访问。系统会陆续更新一些实用功能。
         </p> -->
-        <p>
+       <!--  <p>
           <b>当前版本:</b> <span>v{{ version }}</span>
         </p>
         <p>
@@ -25,7 +25,7 @@
             @click="goTarget('http://ruoyi.vip')"
             >访问主页</el-button
           >
-        </p>
+        </p> -->
       </el-col>
 
       <el-col :sm="24" :lg="12" style="padding-left: 50px">
@@ -40,7 +40,7 @@
             <ul>
               <li>SpringBoot</li>
               <li>Spring Security</li>
-              <li>JWT</li>
+              <li>Mysql</li>
               <li>MyBatis</li>
               <li>Druid</li>
               <li>Fastjson</li>
@@ -54,8 +54,6 @@
               <li>Vuex</li>
               <li>Element-ui</li>
               <li>Axios</li>
-              <li>Sass</li>
-              <li>Quill</li>
               <li>...</li>
             </ul>
           </el-col>

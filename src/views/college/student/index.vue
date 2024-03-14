@@ -1,8 +1,8 @@
 <template>
     <div class="app-container">
       <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-        <el-form-item label="部门ID" prop="deptId">
-          <el-select v-model="queryParams.deptId" placeholder="请选择部门ID" clearable>
+        <el-form-item label="专业" prop="deptId">
+          <el-select v-model="queryParams.deptId" placeholder="请选择专业" clearable>
             <el-option
               v-for="dict in dict.type.internship_major"
               :key="dict.value"
@@ -11,26 +11,26 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="用户账号" prop="userName">
+        <el-form-item label="学生账号" prop="userName">
           <el-input
             v-model="queryParams.userName"
-            placeholder="请输入用户账号"
+            placeholder="请输入学生账号"
             clearable
             @keyup.enter.native="handleQuery"
           />
         </el-form-item>
-        <el-form-item label="用户昵称" prop="nickName">
+        <el-form-item label="学生昵称" prop="nickName">
           <el-input
             v-model="queryParams.nickName"
-            placeholder="请输入用户昵称"
+            placeholder="请输入学生昵称"
             clearable
             @keyup.enter.native="handleQuery"
           />
         </el-form-item>
-        <el-form-item label="用户邮箱" prop="email">
+        <el-form-item label="学生邮箱" prop="email">
           <el-input
             v-model="queryParams.email"
-            placeholder="请输入用户邮箱"
+            placeholder="请输入学生邮箱"
             clearable
             @keyup.enter.native="handleQuery"
           />
@@ -43,8 +43,8 @@
             @keyup.enter.native="handleQuery"
           />
         </el-form-item>
-        <el-form-item label="用户性别" prop="sex">
-          <el-select v-model="queryParams.sex" placeholder="请选择用户性别" clearable>
+        <el-form-item label="性别" prop="sex">
+          <el-select v-model="queryParams.sex" placeholder="请选择性别" clearable>
             <el-option
               v-for="dict in dict.type.sys_user_sex"
               :key="dict.value"
@@ -53,15 +53,15 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="头像地址" prop="avatar">
+        <!-- <el-form-item label="头像地址" prop="avatar">
           <el-input
             v-model="queryParams.avatar"
             placeholder="请输入头像地址"
             clearable
             @keyup.enter.native="handleQuery"
           />
-        </el-form-item>
-        <el-form-item label="密码" prop="password">
+        </el-form-item> -->
+       <!--  <el-form-item label="密码" prop="password">
           <el-input
             v-model="queryParams.password"
             placeholder="请输入密码"
@@ -76,7 +76,7 @@
             clearable
             @keyup.enter.native="handleQuery"
           />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="最后登录时间" prop="loginDate">
           <el-date-picker clearable
             v-model="queryParams.loginDate"
@@ -139,24 +139,24 @@
   
       <el-table v-loading="loading" :data="studentList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="用户ID" align="center" prop="userId" />
-        <el-table-column label="部门ID" align="center" prop="deptId">
+        <el-table-column label="学生" align="center" prop="userId" />
+        <el-table-column label="专业" align="center" prop="deptId">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.internship_major" :value="scope.row.deptId"/>
           </template>
         </el-table-column>
-        <el-table-column label="用户账号" align="center" prop="userName" />
-        <el-table-column label="用户昵称" align="center" prop="nickName" />
-        <el-table-column label="用户类型" align="center" prop="userType" />
-        <el-table-column label="用户邮箱" align="center" prop="email" />
+        <el-table-column label="学生账号" align="center" prop="userName" />
+        <el-table-column label="学生昵称" align="center" prop="nickName" />
+        <!-- <el-table-column label="学生类型" align="center" prop="userType" /> -->
+        <el-table-column label="学生邮箱" align="center" prop="email" />
         <el-table-column label="手机号码" align="center" prop="phonenumber" />
-        <el-table-column label="用户性别" align="center" prop="sex">
+        <el-table-column label="性别" align="center" prop="sex">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.sex"/>
           </template>
         </el-table-column>
-        <el-table-column label="头像地址" align="center" prop="avatar" />
-        <el-table-column label="密码" align="center" prop="password" />
+        <!-- <el-table-column label="头像地址" align="center" prop="avatar" /> -->
+        <!-- <el-table-column label="密码" align="center" prop="password" /> -->
         <el-table-column label="帐号状态" align="center" prop="status" />
         <el-table-column label="最后登录IP" align="center" prop="loginIp" />
         <el-table-column label="最后登录时间" align="center" prop="loginDate" width="180">
@@ -193,33 +193,24 @@
         @pagination="getList"
       />
   
-      <!-- 添加或修改用户信息对话框 -->
+      <!-- 添加或修改学生信息对话框 -->
       <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <el-form-item label="部门ID" prop="deptId">
-            <el-select v-model="form.deptId" placeholder="请选择部门ID">
-              <el-option
-                v-for="dict in dict.type.internship_major"
-                :key="dict.value"
-                :label="dict.label"
-                :value="parseInt(dict.value)"
-              ></el-option>
-            </el-select>
+         
+          <el-form-item label="学生账号" prop="userName">
+            <el-input v-model="form.userName" placeholder="请输入学生账号" />
           </el-form-item>
-          <el-form-item label="用户账号" prop="userName">
-            <el-input v-model="form.userName" placeholder="请输入用户账号" />
+          <el-form-item label="学生昵称" prop="nickName">
+            <el-input v-model="form.nickName" placeholder="请输入学生昵称" />
           </el-form-item>
-          <el-form-item label="用户昵称" prop="nickName">
-            <el-input v-model="form.nickName" placeholder="请输入用户昵称" />
-          </el-form-item>
-          <el-form-item label="用户邮箱" prop="email">
-            <el-input v-model="form.email" placeholder="请输入用户邮箱" />
+          <el-form-item label="学生邮箱" prop="email">
+            <el-input v-model="form.email" placeholder="请输入学生邮箱" />
           </el-form-item>
           <el-form-item label="手机号码" prop="phonenumber">
             <el-input v-model="form.phonenumber" placeholder="请输入手机号码" />
           </el-form-item>
-          <el-form-item label="用户性别" prop="sex">
-            <el-select v-model="form.sex" placeholder="请选择用户性别">
+          <el-form-item label="性别" prop="sex">
+            <el-select v-model="form.sex" placeholder="请选择性别">
               <el-option
                 v-for="dict in dict.type.sys_user_sex"
                 :key="dict.value"
@@ -228,13 +219,23 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="头像地址" prop="avatar">
+          <!-- <el-form-item label="头像地址" prop="avatar">
             <el-input v-model="form.avatar" placeholder="请输入头像地址" />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="密码" prop="password">
             <el-input v-model="form.password" placeholder="请输入密码" />
           </el-form-item>
-          <el-form-item label="删除标志" prop="delFlag">
+          <el-form-item label="专业" prop="deptId">
+            <el-select v-model="form.deptId" placeholder="请选择专业">
+              <el-option
+                v-for="dict in dict.type.internship_major"
+                :key="dict.value"
+                :label="dict.label"
+                :value="parseInt(dict.value)"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+       <!--    <el-form-item label="删除标志" prop="delFlag">
             <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
           </el-form-item>
           <el-form-item label="最后登录IP" prop="loginIp">
@@ -247,7 +248,7 @@
               value-format="yyyy-MM-dd"
               placeholder="请选择最后登录时间">
             </el-date-picker>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="备注" prop="remark">
             <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
           </el-form-item>
@@ -280,7 +281,7 @@
         showSearch: true,
         // 总条数
         total: 0,
-        // 用户信息表格数据
+        // 学生信息表格数据
         studentList: [],
         // 弹出层标题
         title: "",
@@ -308,10 +309,10 @@
         // 表单校验
         rules: {
           userName: [
-            { required: true, message: "用户账号不能为空", trigger: "blur" }
+            { required: true, message: "学生账号不能为空", trigger: "blur" }
           ],
           nickName: [
-            { required: true, message: "用户昵称不能为空", trigger: "blur" }
+            { required: true, message: "学生昵称不能为空", trigger: "blur" }
           ],
         }
       };
@@ -320,7 +321,7 @@
       this.getList();
     },
     methods: {
-      /** 查询用户信息列表 */
+      /** 查询学生信息列表 */
       getList() {
         this.loading = true;
         listStudent(this.queryParams).then(response => {
@@ -379,7 +380,7 @@
       handleAdd() {
         this.reset();
         this.open = true;
-        this.title = "添加用户信息";
+        this.title = "添加学生信息";
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
@@ -388,7 +389,7 @@
         getStudent(userId).then(response => {
           this.form = response.data;
           this.open = true;
-          this.title = "修改用户信息";
+          this.title = "修改学生信息";
         });
       },
       /** 提交按钮 */
@@ -414,7 +415,7 @@
       /** 删除按钮操作 */
       handleDelete(row) {
         const userIds = row.userId || this.ids;
-        this.$modal.confirm('是否确认删除用户信息编号为"' + userIds + '"的数据项？').then(function() {
+        this.$modal.confirm('是否确认删除学生信息编号为"' + userIds + '"的数据项？').then(function() {
           return delStudent(userIds);
         }).then(() => {
           this.getList();
