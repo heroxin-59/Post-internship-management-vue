@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="实习学生姓名" prop="name">
+      <!-- <el-form-item label="实习学生姓名" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入实习学生姓名"
@@ -26,7 +26,7 @@
             :value="dict.value"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="申请时间" prop="applyDate">
         <el-date-picker clearable
           v-model="queryParams.applyDate"
@@ -35,15 +35,15 @@
           placeholder="请选择申请时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="申请理由" prop="reason">
+    <!--   <el-form-item label="申请理由" prop="reason">
         <el-input
           v-model="queryParams.reason"
           placeholder="请输入申请理由"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="申请实习单位" prop="company">
+      </el-form-item> -->
+      <el-form-item label="实习单位" prop="company">
         <el-select v-model="queryParams.company" placeholder="请选择申请实习单位" clearable>
           <el-option
             v-for="dict in dict.type.internship_company"
@@ -63,7 +63,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="指导教师意见" prop="teacherMemo">
+      <el-form-item label-width="120px"	 label="指导教师意见" prop="teacherMemo">
         <el-select v-model="queryParams.teacherMemo" placeholder="请选择指导教师意见" clearable>
           <el-option
             v-for="dict in dict.type.internship_momo"
@@ -73,7 +73,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="实习单位负责人意见" prop="headMemo">
+      <el-form-item label-width="120px"	 label="实习单位意见" prop="headMemo">
         <el-select v-model="queryParams.headMemo" placeholder="请选择实习单位负责人意见" clearable>
           <el-option
             v-for="dict in dict.type.internship_momo"
@@ -147,9 +147,9 @@
 
     <el-table v-loading="loading" :data="applyList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键ID" align="center" prop="id" />
-      <el-table-column label="实习学生姓名" align="center" prop="name" />
-      <el-table-column label="实习生学号" align="center" prop="code" />
+      <el-table-column label="主键" align="center" prop="id" />
+      <el-table-column label="姓名" align="center" prop="name" />
+      <el-table-column label="学号" align="center" prop="code" />
       <el-table-column label="所学专业" align="center" prop="major">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.internship_major" :value="scope.row.major"/>
@@ -176,7 +176,7 @@
           <dict-tag :options="dict.type.internship_momo" :value="scope.row.teacherMemo"/>
         </template>
       </el-table-column>
-      <el-table-column label="实习单位负责人意见" align="center" prop="headMemo">
+      <el-table-column label="实习单位意见" align="center" prop="headMemo">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.internship_momo" :value="scope.row.headMemo"/>
         </template>
@@ -217,10 +217,10 @@
     <!-- 添加或修改实习申请信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="实习学生姓名" prop="name">
+        <el-form-item label="姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入实习学生姓名" />
         </el-form-item>
-        <el-form-item label="实习生学号" prop="code">
+        <el-form-item label="学号" prop="code">
           <el-input v-model="form.code" placeholder="请输入实习生学号" />
         </el-form-item>
         <el-form-item label="所学专业" prop="major">
@@ -244,7 +244,7 @@
         <el-form-item label="申请理由" prop="reason">
           <el-input v-model="form.reason" placeholder="请输入申请理由" />
         </el-form-item>
-        <el-form-item label="申请实习单位" prop="company">
+        <el-form-item label="实习单位" prop="company">
           <el-select v-model="form.company" placeholder="请选择申请实习单位">
             <el-option
               v-for="dict in dict.type.internship_company"
@@ -264,7 +264,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="指导教师意见" prop="teacherMemo">
+     <!--    <el-form-item label="指导教师意见" prop="teacherMemo">
           <el-select v-model="form.teacherMemo" placeholder="请选择指导教师意见">
             <el-option
               v-for="dict in dict.type.internship_momo"
@@ -293,7 +293,7 @@
               :value="dict.value"
             ></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>

@@ -43,7 +43,7 @@
             @keyup.enter.native="handleQuery"
           />
         </el-form-item>
-        <el-form-item label="性别" prop="sex">
+<!--         <el-form-item label="性别" prop="sex">
           <el-select v-model="queryParams.sex" placeholder="请选择性别" clearable>
             <el-option
               v-for="dict in dict.type.sys_user_sex"
@@ -52,7 +52,7 @@
               :value="dict.value"
             />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <!-- <el-form-item label="头像地址" prop="avatar">
           <el-input
             v-model="queryParams.avatar"
@@ -77,14 +77,14 @@
             @keyup.enter.native="handleQuery"
           />
         </el-form-item> -->
-        <el-form-item label="最后登录时间" prop="loginDate">
+  <!--       <el-form-item label="最后登录时间" prop="loginDate">
           <el-date-picker clearable
             v-model="queryParams.loginDate"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="请选择最后登录时间">
           </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
           <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -157,7 +157,7 @@
         </el-table-column>
         <!-- <el-table-column label="头像地址" align="center" prop="avatar" /> -->
         <!-- <el-table-column label="密码" align="center" prop="password" /> -->
-        <el-table-column label="帐号状态" align="center" prop="status" />
+        <!-- <el-table-column label="帐号状态" align="center" prop="status" /> -->
         <el-table-column label="最后登录IP" align="center" prop="loginIp" />
         <el-table-column label="最后登录时间" align="center" prop="loginDate" width="180">
           <template slot-scope="scope">

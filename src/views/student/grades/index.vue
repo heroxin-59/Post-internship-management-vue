@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="实习生学号" prop="code">
+      <!-- <el-form-item label="实习生学号" prop="code">
         <el-input
           v-model="queryParams.code"
           placeholder="请输入实习生学号"
@@ -16,7 +16,7 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="指导教师" prop="teachet">
         <el-input
           v-model="queryParams.teachet"
@@ -25,7 +25,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="实习单位负责人" prop="companyTeacher">
+      <el-form-item label-width="120px"	 label="实习单位负责人" prop="companyTeacher">
         <el-input
           v-model="queryParams.companyTeacher"
           placeholder="请输入实习单位负责人"
@@ -43,94 +43,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="出勤成绩1" prop="cq1Grages">
-        <el-input
-          v-model="queryParams.cq1Grages"
-          placeholder="请输入出勤成绩1"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="工作态度成绩1" prop="at1Grades">
-        <el-input
-          v-model="queryParams.at1Grades"
-          placeholder="请输入工作态度成绩1"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="实习日志成绩1" prop="log1Grades">
-        <el-input
-          v-model="queryParams.log1Grades"
-          placeholder="请输入实习日志成绩1"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="团队协助成绩1" prop="team1Grades">
-        <el-input
-          v-model="queryParams.team1Grades"
-          placeholder="请输入团队协助成绩1"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="综合成绩1" prop="score">
-        <el-input
-          v-model="queryParams.score"
-          placeholder="请输入综合成绩1"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="出勤成绩2" prop="cq2Grades">
-        <el-input
-          v-model="queryParams.cq2Grades"
-          placeholder="请输入出勤成绩2"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="工作态度成绩2" prop="at2Grades">
-        <el-input
-          v-model="queryParams.at2Grades"
-          placeholder="请输入工作态度成绩2"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="实习日志成绩2" prop="log2Grades">
-        <el-input
-          v-model="queryParams.log2Grades"
-          placeholder="请输入实习日志成绩2"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="团队协助成绩2" prop="team2Grades">
-        <el-input
-          v-model="queryParams.team2Grades"
-          placeholder="请输入团队协助成绩2"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="综合成绩2" prop="score1">
-        <el-input
-          v-model="queryParams.score1"
-          placeholder="请输入综合成绩2"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="总成绩" prop="totalScore">
-        <el-input
-          v-model="queryParams.totalScore"
-          placeholder="请输入总成绩"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+     
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -185,11 +98,11 @@
 
     <el-table v-loading="loading" :data="gradesList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键ID" align="center" prop="id" />
-      <el-table-column label="实习生学号" align="center" prop="code" />
-      <el-table-column label="实习生" align="center" prop="student" />
+      <el-table-column label="主键" align="center" prop="id" />
+      <el-table-column label="学号" align="center" prop="code" />
+      <el-table-column label="姓名" align="center" prop="student" />
       <el-table-column label="指导教师" align="center" prop="teachet" />
-      <el-table-column label="实习单位负责人" align="center" prop="companyTeacher" />
+      <el-table-column width="120px" label="实习单位负责人" align="center" prop="companyTeacher" />
       <el-table-column label="实习单位" align="center" prop="company">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.internship_company" :value="scope.row.company"/>
@@ -237,11 +150,11 @@
     <!-- 添加或修改实习成绩信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="实习生学号" prop="code">
-          <el-input v-model="form.code" placeholder="请输入实习生学号" />
+        <el-form-item label="学号" prop="code">
+          <el-input v-model="form.code" placeholder="请输入学号" />
         </el-form-item>
-        <el-form-item label="实习生" prop="student">
-          <el-input v-model="form.student" placeholder="请输入实习生" />
+        <el-form-item label="姓名" prop="student">
+          <el-input v-model="form.student" placeholder="请输入姓名" />
         </el-form-item>
         <el-form-item label="指导教师" prop="teachet">
           <el-input v-model="form.teachet" placeholder="请输入指导教师" />

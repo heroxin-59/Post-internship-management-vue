@@ -1,14 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="实习生" prop="student">
+   <!--    <el-form-item label="实习生" prop="student">
         <el-input
           v-model="queryParams.student"
           placeholder="请输入实习生"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="实习单位" prop="company">
         <el-select v-model="queryParams.company" placeholder="请选择实习单位" clearable>
           <el-option
@@ -19,14 +19,14 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="工作日志" prop="dailyLog">
+    <!--   <el-form-item label="工作日志" prop="dailyLog">
         <el-input
           v-model="queryParams.dailyLog"
           placeholder="请输入工作日志"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="创建时间" prop="createDate">
         <el-date-picker clearable
           v-model="queryParams.createDate"
@@ -89,8 +89,8 @@
 
     <el-table v-loading="loading" :data="logList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键ID" align="center" prop="id" />
-      <el-table-column label="实习生" align="center" prop="student" />
+      <el-table-column label="主键" align="center" prop="id" />
+      <el-table-column label="姓名" align="center" prop="student" />
       <el-table-column label="实习单位" align="center" prop="company">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.internship_company" :value="scope.row.company"/>
@@ -134,8 +134,8 @@
     <!-- 添加或修改实习日志信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="实习生" prop="student">
-          <el-input v-model="form.student" placeholder="请输入实习生" />
+        <el-form-item label="姓名" prop="student">
+          <el-input v-model="form.student" placeholder="请输入姓名" />
         </el-form-item>
         <el-form-item label="实习单位" prop="company">
           <el-select v-model="form.company" placeholder="请选择实习单位">

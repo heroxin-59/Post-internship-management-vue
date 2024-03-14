@@ -31,14 +31,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="实习工作内容" prop="workContent">
-          <el-input
-            v-model="queryParams.workContent"
-            placeholder="请输入实习工作内容"
-            clearable
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
+   
         <el-form-item label="实习开始时间" prop="startDate">
           <el-date-picker clearable
             v-model="queryParams.startDate"
@@ -117,7 +110,7 @@
   
       <el-table v-loading="loading" :data="informationList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="主键ID" align="center" prop="id" />
+        <el-table-column label="主键" align="center" prop="id" />
         <el-table-column label="实习单位" align="center" prop="company">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.internship_company" :value="scope.row.company"/>
@@ -207,10 +200,10 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="实习工作内容" prop="workContent">
+          <el-form-item label="工作内容" prop="workContent">
             <el-input v-model="form.workContent" placeholder="请输入实习工作内容" />
           </el-form-item>
-          <el-form-item label="实习开始时间" prop="startDate">
+          <el-form-item label="开始时间" prop="startDate">
             <el-date-picker clearable
               v-model="form.startDate"
               type="date"
@@ -218,7 +211,7 @@
               placeholder="请选择实习开始时间">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="实习结束时间" prop="endDate">
+          <el-form-item label="结束时间" prop="endDate">
             <el-date-picker clearable
               v-model="form.endDate"
               type="date"
