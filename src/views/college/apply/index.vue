@@ -66,7 +66,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label-width="140px" label="实习单位负责人意见" prop="headMemo">
+        <!-- <el-form-item label-width="140px" label="实习单位负责人意见" prop="headMemo">
           <el-select v-model="queryParams.headMemo" placeholder="请选择实习单位负责人意见" clearable>
             <el-option
               v-for="dict in dict.type.internship_momo"
@@ -75,7 +75,7 @@
               :value="dict.value"
             />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="申请状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="请选择申请状态" clearable>
             <el-option
@@ -169,11 +169,11 @@
             <dict-tag :options="dict.type.internship_momo" :value="scope.row.teacherMemo"/>
           </template>
         </el-table-column>
-        <el-table-column width="140px" label="实习单位负责人意见" align="center" prop="headMemo">
+        <!-- <el-table-column width="140px" label="实习单位负责人意见" align="center" prop="headMemo">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.internship_momo" :value="scope.row.headMemo"/>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="申请状态" align="center" prop="status">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.internship_status" :value="scope.row.status"/>
